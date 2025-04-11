@@ -143,7 +143,7 @@ class formatting {
      * This function should mainly be used for long strings like posts,
      * answers, glossary items etc. For short strings {@link format_string()}.
      *
-     * @param null|string $text The text to be formatted. This is raw text originally from user input.
+     * @param string|array|null $text The text to be formatted. This is raw text originally from user input.
      * @param string $format Identifier of the text format to be used
      *              [FORMAT_MOODLE, FORMAT_HTML, FORMAT_PLAIN, FORMAT_MARKDOWN]
      * @param null|context $context The context used for filtering
@@ -160,7 +160,7 @@ class formatting {
      * @return string
      */
     public function format_text(
-        ?string $text,
+        string|array|null $text,
         string $format = FORMAT_MOODLE,
         ?context $context = null,
         bool $trusted = false,
@@ -173,6 +173,11 @@ class formatting {
         bool $allowid = false,
     ): string {
         global $CFG, $PAGE;
+
+        // If array convert it to string.
+        if (is_array($text)) {
+            $text = implode(', ', $text);
+        }
 
         if ($text === '' || is_null($text)) {
             // No need to do any filters and cleaning.
